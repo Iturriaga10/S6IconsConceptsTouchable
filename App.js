@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, Image, FlatList } from 'react-native';
 import {Header} from './Header';
-import {Feed} from './Feed';
+
 import {UserProfile} from './UserProfile';
 
 export default function App() {
@@ -46,26 +46,16 @@ export default function App() {
       "description": "Description Description Description Description Description Description Description Description",
       "like": false,
     },
-    {
-      "_id": 6,
-      "name": "Jorge Luis Borges",
-      "image": 'https://www.hola.com/imagenes/estar-bien/20190820147813/razas-perros-pequenos-parecen-grandes/0-711-550/razas-perro-pequenos-grandes-a.jpg',
-      "description": "Description Description Description Description Description Description Description Description",
-      "like": true,
-    },
+    
+    
   ]
+  
   
   return (
     <>
     <Header />
-    <UserProfile data = {dataUser}/>
-    <FlatList 
-      keyExtractor={ (item) => String(item['_id']) }
-      data = {dataFeed}
-      renderItem = { ({item}) =>(
-        <Feed data={item}/>
-      )}
-    />
+    <UserProfile data = {dataUser} lista={dataFeed} userD={dataUser}/>
+    
     </>
   );
 }

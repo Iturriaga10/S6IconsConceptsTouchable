@@ -10,7 +10,7 @@ export const Feed = (props) => {
   const [like, setLike] = useState(props.data.like);
     
   const _onPressButton = () => {
-    data.like = ! data.like;
+    data.like = data.like;
     setData(data);
     setLike(!like);
   };
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
       marginTop: 1,
   },
   text:{
-    fontFamily: 'sans-serif-light',
+    fontFamily: 'Georgia',
     fontSize: 20,
     color: 'black' 
   },

@@ -18,6 +18,7 @@ export const Header = () => {
       />
       <Text style={styles.text}>Dogstagram</Text>    
     </View>
+    
   );
 }
   
@@ -32,7 +33,7 @@ const styles = StyleSheet.create({
       borderBottomWidth: 1,
     },
     text:{
-      fontFamily: 'sans-serif-light',
+      fontFamily: 'AvenirNextCondensed-BoldItalic',
       fontSize: 30,
       color: 'white' 
     },
