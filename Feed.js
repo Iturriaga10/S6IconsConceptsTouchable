@@ -19,6 +19,13 @@ export const Feed = (props) => {
 
   const [modalVisible, setModalVisible] = useState(false);
 
+  const [dataOnModal, setDataOnModal] = useState(data);
+
+  const _sendData = (props) => {
+    setDataOnModal(props);
+    setModalVisible(!modalVisible);
+  };
+
   const _onPressButton = () => {
     data.like = !data.like;
     setData(data);
@@ -68,7 +75,9 @@ export const Feed = (props) => {
               style={[styles.button, styles.buttonClose]}
               onPress={() => setModalVisible(!modalVisible)}
             >
-              <Text style={styles.textStyle}>Hide Modal</Text>
+              <Text style={styles.textStyle}>
+                {dataOnModal.name} Hide Modal
+              </Text>
             </Pressable>
           </View>
         </View>
@@ -102,7 +111,7 @@ export const Feed = (props) => {
             },
             styles.wrapperCustom,
           ]}
-          onPress={() => setModalVisible(!modalVisible)}
+          onPress={() => _sendData(data)}
         >
           {({ pressed }) => (
             <AntDesign
