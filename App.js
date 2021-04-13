@@ -1,7 +1,8 @@
-import React from 'react';
-import { StyleSheet, Text, View, Image, FlatList } from 'react-native';
+import React, {useState, useEffect } from 'react';
+import { StyleSheet, Text, View, Image, FlatList, ActivityIndicator } from 'react-native';
 import {Header} from './Header';
 import {Feed} from './Feed';
+
 import {UserProfile} from './UserProfile';
 
 export default function App() {
@@ -9,63 +10,35 @@ export default function App() {
     "name": "Carlos Fuentes",
     "image": "https://cnnespanol.cnn.com/wp-content/uploads/2020/07/200703104728-labrador-retriever-stock-super-169.jpg?quality=100&strip=info&w=940&h=530&crop=1",
   }
-  
-  const dataFeed = [
-    {
-      "_id": 1,
-      "name": "Jorge Luis Borges",
-      "image": 'https://www.ecestaticos.com/image/clipping/557/418/7052744faf519355ca32636cf370cf63/tres-estudios-que-han-cambiado-todo-lo-que-creiamos-sobre-los-perros.jpg',
-      "description": "Description Description Description Description Description Description Description Description",
-      "like": true,
-    },
-    {
-      "_id": 2,
-      "name": "Julio Cortazar",
-      "image": 'https://cdn.forbes.com.mx/2018/12/perro_china-640x360.jpg',
-      "description": "Description Description Description Description Description Description Description Description",
-      "like": true,
-    },
-    {
-      "_id": 3,
-      "name": "Jorge Luis Borges",
-      "image": 'https://www.hola.com/imagenes/estar-bien/20190820147813/razas-perros-pequenos-parecen-grandes/0-711-550/razas-perro-pequenos-grandes-a.jpg',
-      "description": "Description Description Description Description Description Description Description Description",
-      "like": false,
-    },
-    {
-      "_id": 4,
-      "name": "Jorge Luis Borges",
-      "image": 'https://www.ecestaticos.com/image/clipping/557/418/7052744faf519355ca32636cf370cf63/tres-estudios-que-han-cambiado-todo-lo-que-creiamos-sobre-los-perros.jpg',
-      "description": "Description Description Description Description Description Description Description Description",
-      "like": true,
-    },
-    {
-      "_id": 5,
-      "name": "Julio Cortazar",
-      "image": 'https://cdn.forbes.com.mx/2018/12/perro_china-640x360.jpg',
-      "description": "Description Description Description Description Description Description Description Description",
-      "like": false,
-    },
-    {
-      "_id": 6,
-      "name": "Jorge Luis Borges",
-      "image": 'https://www.hola.com/imagenes/estar-bien/20190820147813/razas-perros-pequenos-parecen-grandes/0-711-550/razas-perro-pequenos-grandes-a.jpg',
-      "description": "Description Description Description Description Description Description Description Description",
-      "like": true,
-    },
-  ]
-  
+
+  const dogstagramURL = 'http://b098ba2f1199.ngrok.io/feed';
+
+  const [dataFeed, setDataFeed] = useState([]);
+
+  const [isLoading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch(dogstagramURL)
+    .then( (response) => response.json() )
+    .then( (json) => setDataFeed(json) )
+    .catch((error) => alert(error))
+    .finally(() => setLoading(false));
+  }, []);
+
+
   return (
     <>
     <Header />
     <UserProfile data = {dataUser}/>
-    <FlatList 
-      keyExtractor={ (item) => String(item['_id']) }
-      data = {dataFeed}
-      renderItem = { ({item}) =>(
-        <Feed data={item}/>
+    { isLoading ? <ActivityIndicator/>: (
+        <FlatList 
+          keyExtractor={ (item) => String(item['_id']['$oid']) }
+          data = {dataFeed}
+          renderItem = { ({item}) =>(
+            <Feed data={item}/>
+          )}
+      />
       )}
-    />
     </>
   );
 }

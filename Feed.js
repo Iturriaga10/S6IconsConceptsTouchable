@@ -1,16 +1,39 @@
 import React, {useState} from 'react';
-import { StyleSheet, Text, View, Image, TouchableHighlight } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableHighlight, FlatList } from 'react-native';
 import { Entypo } from '@expo/vector-icons'; 
 import { Feather } from '@expo/vector-icons';
+
 
 export const Feed = (props) => {
 
   const [data, setData] = useState(props.data);
 
   const [like, setLike] = useState(props.data.like);
-    
+
+  const [likeCounter, setLikeCounter] = useState(props.data.likeCounter);
+  
+  const dogstagramURL = 'http://b098ba2f1199.ngrok.io/feed';
+
   const _onPressButton = () => {
-    data.like = ! data.like;
+    if(like){
+      fetch(dogstagramURL + '/like/decrease/' + String(data['_id']['$oid']), {
+        method: 'PUT',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        }
+      });
+      setLikeCounter(likeCounter-1);
+    }else{
+      fetch(dogstagramURL + '/like/increase/' + String(data['_id']['$oid']), {
+        method: 'PUT',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        }
+      });
+      setLikeCounter(likeCounter+1);
+    }
     setData(data);
     setLike(!like);
   };
@@ -25,12 +48,25 @@ export const Feed = (props) => {
         <Text style={styles.text}>{data.name}</Text>
       </View>
       <Text style={styles.descriptionText}>{data.description}</Text>
+      
+      {data.media.image === "" ? 
+        null : 
+        (
+        <View style={styles.imageFeedContainer}>
+          <Image 
+            source={{ uri: data.image }}
+            style={styles.imageFeed}
+          />
+       </View>
+      )}
+      
       <View style={styles.imageReactionContainer}>
       <TouchableHighlight onPress={ _onPressButton } underlayColor="white">
         <View style={styles.iconContainer}>
-          { like ? <Entypo name="baidu" size={20} color="rgb(110,110,110)" /> : <Entypo name="baidu" size={20} color="blue" />}
+          { like ? <Entypo name="baidu" size={20} color="blue" /> : <Entypo name="baidu" size={20} color="rgb(110,110,110)" />}
         </View>
       </TouchableHighlight>
+      <Text>{likeCounter}</Text>
         <View style={styles.iconContainer}>
           <Feather name="share-2" size={20} color="rgb(110,110,110)" />
         </View>
@@ -75,6 +111,15 @@ const styles = StyleSheet.create({
       marginLeft: 16,
       width: 30, 
       height:30
-  }
+  },
+  imageFeed:{
+    width: 200, 
+    height:200,
+    marginBottom: 4
+},
+  imageFeedContainer:{
+    justifyContent: 'center',
+    alignItems: 'center',
+},
 });
   

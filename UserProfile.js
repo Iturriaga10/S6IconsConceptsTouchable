@@ -1,17 +1,53 @@
 import React, {useState} from 'react';
-import { StyleSheet, View, Image, TextInput, Button } from 'react-native';
+import { StyleSheet, View, Image, TextInput, Button, FlatList } from 'react-native';
+import {Feed} from './Feed';
 
 export const UserProfile = (props) => {
   
   const data = props.data; 
 
-  const [text, onChangeText] = React.useState("");
+  const [text, onChangeText] = useState("");
   
   const [isFocus, setIsFocus] = useState(false);
 
   const onFocus = () =>{
     setIsFocus(!isFocus)
   }
+
+  const [dataFeed, onChangeDataFeed] = useState(props.dataFeed);
+  
+  const dogstagramURL = 'http://b098ba2f1199.ngrok.io/feed';
+
+  const _onPressButton = () => {
+    const newElemnt = {
+        "name": data.name,
+        "image": data.image,
+        "description": text,
+        "media": {
+          "video": "",
+          "image": ""
+        }
+      };
+
+    fetch(dogstagramURL, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        name: data.name,
+        image: data.image,
+        description: text,
+        media: {
+          video: "",
+          image: ""
+        }
+      })
+    });
+
+    // onChangeDataFeed([newElemnt, [...dataFeed]]);
+  };
   
   return(
     <>
@@ -34,9 +70,16 @@ export const UserProfile = (props) => {
       />
     </View>
     <View style={styles.button}>
-      { isFocus ? <Button title="Post" onPress={() => Alert.alert('Simple Button pressed')} />  
+      { isFocus ? <Button title="Post" onPress={ _onPressButton } />  
                 : null }
     </View>
+    <FlatList 
+      keyExtractor={ (item) => String(item['_id']) }
+      data = {dataFeed}
+      renderItem = { ({item}) =>(
+        <Feed data={item}/>
+      )}
+    />
     </>
   );
 }
